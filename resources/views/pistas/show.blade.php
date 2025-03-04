@@ -26,13 +26,13 @@
                                     @csrf
                                     @if ($reservada)
                                         @method('delete')
-                                    @endif
-                                    <input type="hidden" name="hora" value="{{ $hora }}">
-                                    <input type="hidden" name="pista_id" value="{{ $pista->id }}">
+                                        <input type="hidden" name="hora" value="{{ $hora }}">
+                                        <input type="hidden" name="pista_id" value="{{ $pista->id }}">
 
-                                    <x-primary-button class="{{ $reservada ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600' }}">
-                                        {{ $reservada ? 'Anular' : $hora->format('H:i') }}
-                                    </x-primary-button>
+                                        <x-primary-button class="{{ $reservada ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600' }}">
+                                            {{ $reservada ? 'Anular' : $hora->format('H:i') }}
+                                        </x-primary-button>
+                                    @endif
                                 </form>
                             </td>
                         @endforeach
