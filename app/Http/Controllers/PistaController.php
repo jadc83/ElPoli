@@ -26,7 +26,7 @@ class PistaController extends Controller
     {
         $pista = Pista::find($request->pista_id);
         $hora = Carbon::today();
-        $hoy = Carbon::today()->startOfWeek();
+        $hoy = $hora->startOfWeek();
         return view('pistas.show', ['pista' => $pista, 'hoy' => $hoy, 'hora' => $hora]);
     }
 
@@ -52,8 +52,7 @@ class PistaController extends Controller
     public function show(Pista $pista)
     {
 
-        $reservas = Reserva::all();
-        return view('pistas.show', ['pista' => $pista, 'reservas' => $reservas, 'hoy' => $hoy]);
+        return view('pistas.show', ['pista' => $pista, 'reservas' => $reservas]);
     }
 
     /**

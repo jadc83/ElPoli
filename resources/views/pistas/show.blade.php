@@ -5,47 +5,39 @@
         <table class="min-w-full table-auto text-center mx-auto border-collapse border border-gray-300">
             <thead class="bg-gray-100">
                 <tr>
-                    @for ($i = 0; $i < 5; $i++)
-                        <th class="px-4 py-2 border border-gray-300">{{ $hoy->copy()->addDay($i)->format('l') }}</th>
-                    @endfor
+                    @foreach (range(0, 4) as $dias)
+                        <th class="px-4 py-2 border border-gray-300">{{ $hoy->copy()->addDay($dias)->format('l') }}</th>
+                    @endforeach
                 </tr>
             </thead>
             <tbody>
-                @for ($j = 10; $j < 20; $j++)
+                @foreach (range(10, 19) as $horario)
                     <tr>
-                        @for ($i = 0; $i < 5; $i++)
+                        @foreach (range(0, 4) as $dias)
                             @php
-                                $hora = $hoy->copy()->addDay($i)->setTime($j, 0);
+                                $hora = $hoy->copy()->addDay($dias)->setTime($horario, 0);
                                 $reservada = \App\Models\Reserva::where('pista_id', $pista->id)
                                     ->where('fecha_hora', $hora)
-                                    ->exists();
+                                    ->first();
                             @endphp
 
                             <td class="px-4 py-2 border border-gray-300">
-                                @if ($reservada)
-                                    <form action="{{ route('reservas.destroy', $reservada) }}" method="POST">
-                                        @csrf
+                                <form action="{{ $reservada ? route('reservas.destroy', $reservada) : route('reservas.store') }}" method="POST">
+                                    @csrf
+                                    @if ($reservada)
                                         @method('delete')
-                                        <input type="hidden" name="hora" value="{{ $hora }}">
-                                        <input type="hidden" name="pista_id" value="{{ $pista->id }}">
-                                        <x-primary-button class="bg-red-500 hover:bg-red-600">
-                                            Anular
-                                        </x-primary-button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('reservas.store') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="hora" value="{{ $hora }}">
-                                        <input type="hidden" name="pista_id" value="{{ $pista->id }}">
-                                        <x-primary-button class="bg-blue-500 hover:bg-blue-600">
-                                            {{ $hora->format('H:i') }}
-                                        </x-primary-button>
-                                    </form>
-                                @endif
+                                    @endif
+                                    <input type="hidden" name="hora" value="{{ $hora }}">
+                                    <input type="hidden" name="pista_id" value="{{ $pista->id }}">
+
+                                    <x-primary-button class="{{ $reservada ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600' }}">
+                                        {{ $reservada ? 'Anular' : $hora->format('H:i') }}
+                                    </x-primary-button>
+                                </form>
                             </td>
-                        @endfor
+                        @endforeach
                     </tr>
-                @endfor
+                @endforeach
             </tbody>
         </table>
     </div>
